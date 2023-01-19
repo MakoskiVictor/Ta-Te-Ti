@@ -1,7 +1,7 @@
 # Ta-Te-Ti
 <h2>Small game to play with friends</h2>
 <br/>
-There are crosses "X" and circles "O", only need to put three of them together to win. 
+There are crosses "X" and circles "O", only need to put three of them in line to win. 
 
 
 The blue color indicate who have to play.
