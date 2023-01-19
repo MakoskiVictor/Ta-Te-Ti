@@ -1,5 +1,6 @@
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-unused-vars */
 import { Square } from './Square.jsx'
+import { Restart } from './Restart.jsx'
 
 export function Winner ({ winner, resetGame }) {
   if (winner === null) return null
@@ -14,7 +15,7 @@ export function Winner ({ winner, resetGame }) {
         </header>
 
         <footer>
-          <button onClick={resetGame}>Empezar de nuevo</button>
+          <Restart resetGame={resetGame} />
         </footer>
       </div>
     </section>
