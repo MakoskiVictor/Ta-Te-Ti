@@ -1,24 +1,32 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react'
 import './App.css'
 import confetti from 'canvas-confetti'
-// eslint-disable-next-line no-unused-vars
 import { Winner } from './components/Winner.jsx'
-// eslint-disable-next-line no-unused-vars
 import { Board } from './components/Board.jsx'
-// eslint-disable-next-line no-unused-vars
 import { PlayerTurn } from './components/PlayerTurn.jsx'
+import { Restart } from './components/Restart.jsx'
 import { TURNS } from '../constants'
 import { checkWinner, checkEndGame } from './logic/board.js'
 
 function App () {
-  const [board, setBoard] = useState(Array(9).fill(null))
-  const [turn, setTurn] = useState(TURNS.X)
+  const [board, setBoard] = useState(() => {
+    // Usamos una func para evitar renderizaciones innecesarias
+    const boardFromStorage = window.localStorage.getItem('board')
+    return JSON.parse(boardFromStorage) ?? Array(9).fill(null)
+  })
+  const [turn, setTurn] = useState(() => {
+    const turnFromStorage = window.localStorage.getItem('turn')
+    return turnFromStorage ?? TURNS.X
+  })
   const [winner, setWinner] = useState(null)
 
   function resetGame () {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
+    window.localStorage.removeItem('board')
+    window.localStorage.removeItem('turn')
   }
 
   const updateBoard = (index) => {
@@ -31,6 +39,9 @@ function App () {
     // Cambiamos el turno
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
+    // Guardamos la partida
+    window.localStorage.setItem('board', JSON.stringify(newBoard))
+    window.localStorage.setItem('turn', newTurn)
     // Revisamos si hay ganador
     const newWinner = checkWinner(newBoard)
     if (newWinner) {
@@ -44,7 +55,8 @@ function App () {
   return (
     <main className='board'>
       <h1>Ta Te Ti</h1>
-      <button onClick={resetGame}>Empezar de nuevo</button>
+      <Restart resetGame={resetGame} />
+
       <Board board={board} updateBoard={updateBoard} />
 
       <PlayerTurn turn={turn} />
